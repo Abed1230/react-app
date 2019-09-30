@@ -13,11 +13,17 @@ const LoveLangCard = ({ name, lang, handleClick }) => {
     );
 }
 
+/* TODO: move to a json document */
+const loveLanguges = {
+    "A": { name: "Presenter", description: "Ea ullamco non ea magna culpa pariatur et ipsum ex aliquip cillum quis ad. Veniam magna proident reprehenderit elit irure pariatur nostrud et minim amet reprehenderit minim anim officia. Exercitation amet enim anim eu. Aliquip nisi quis ea consectetur minim minim anim consequat adipisicing laborum quis." },
+    "B": { name: "Paprika", description: "Elit veniam Lorem quis duis consequat est. Mollit culpa cupidatat culpa in laboris adipisicing minim. Culpa aute ullamco aute nulla eiusmod qui id tempor dolor fugiat. Velit minim elit est ex deserunt nulla laboris ipsum occaecat minim enim. Excepteur et sit id dolor anim qui. Aute magna fugiat pariatur ex officia consequat et ut laborum do minim amet velit. Cillum proident officia Lorem id." },
+}
+
 class UserView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: props.user,
+            user: props.user ? props.user : {},
             showModal: false,
             modalTitle: "",
             modalText: "",
@@ -25,16 +31,27 @@ class UserView extends React.Component {
     }
     render() {
         const user = this.state.user;
+        const userLoveLang = user.loveLanguage;
+        const partnerLoveLang = user.partner ? user.partner.loveLanguage : null;
 
         return (
             <div>
                 <h4 className="mt-4 mb-4 text-center">Du & {user.partner ? user.partner.name : "?"}</h4>
 
-                {user.loveLanguage &&
-                    <LoveLangCard lang="Presenter" handleClick={() => this.setState({ showModal: true, modalTitle: "Presenter", modalText: "Exercitation laboris irure consectetur non proident consequat dolore. Excepteur exercitation ullamco nostrud Lorem eu qui. In consequat sint incididunt cillum veniam ex sit. Aliqua eu velit esse id aute occaecat ut laborum reprehenderit anim amet. Deserunt laborum magna incididunt labore et esse proident occaecat do nisi ullamco do nisi. Eu nostrud nulla est ipsum reprehenderit aliqua commodo excepteur deserunt tempor. Non duis dolore duis elit sunt sunt nisi duis laboris reprehenderit." })} />
+                {/* TODO: navigate to add partner page */}
+                {!user.partner &&
+                    <div className="text-center"><Button variant="info">Lägg till partner</Button></div>
                 }
 
-                {/* TODO: navigate to test screen */}
+                {partnerLoveLang &&
+                    <LoveLangCard name={user.partner.name} lang={loveLanguges[partnerLoveLang].name} handleClick={() => this.setState({ showModal: true, modalTitle: loveLanguges[partnerLoveLang].name, modalText: loveLanguges[partnerLoveLang].description })} />
+                }
+
+                {userLoveLang &&
+                    <LoveLangCard lang={loveLanguges[userLoveLang].name} handleClick={() => this.setState({ showModal: true, modalTitle: loveLanguges[userLoveLang].name, modalText: loveLanguges[userLoveLang].description })} />
+                }
+
+                {/* TODO: navigate to test page */}
                 {!user.loveLanguage && user.premium &&
                     <Card className="mt-2">
                         <Card.Body>
